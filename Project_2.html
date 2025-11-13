@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Responsive Image Gallery</title>
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f2f2f2;
+}
+header {
+  text-align: center;
+  padding: 20px;
+  background: #444;
+  color: white;
+}
+/* Gallery Container */
+.gallery {
+  max-width: 1200px;
+  margin: 20px auto;
+  display: grid;
+  gap: 15px;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+}
+.gallery img {
+  width: 100%;
+  display: block;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+.gallery img:hover {
+  transform: scale(1.07);
+}
+/* Lightbox */
+.lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+.lightbox img {
+  max-width: 90%;
+  max-height: 80%;
+  border-radius: 10px;
+}
+.nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 40px;
+  color: white;
+  cursor: pointer;
+  user-select: none;
+  padding: 10px;
+}
+#prev {
+  left: 20px;
+}
+#next {
+  right: 20px;
+}
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-size: 40px;
+  color: white;
+  cursor: pointer;
+}
+/* Filter Buttons */
+.filters {
+  text-align: center;
+  margin: 20px;
+}
+.filters button {
+  padding: 8px 15px;
+  margin: 5px;
+  border: none;
+  background: #333;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.filters button:hover {
+  background: #ff5722;
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Responsive Image Gallery</h1>
+</header>
+<div class="filters">
+  <button onclick="filterImages('all')">All</button>
+  <button onclick="filterImages('nature')">Nature</button>
+  <button onclick="filterImages('city')">City</button>
+  <button onclick="filterImages('animals')">Animals</button>
+</div>
+<div class="gallery">
+  <!-- Nature -->
+  <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800" data-category="nature" />
+  <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=800" data-category="nature" />
+  <img src="https://images.unsplash.com/photo-1526403226-4cd34988cd31?w=800" data-category="nature" />
+
+  <!-- City -->
+  <img src="https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=800" data-category="city" />
+  <img src="https://images.unsplash.com/photo-1508057198894-247b23fe5ade?w=800" data-category="city" />
+  <img src="https://images.unsplash.com/photo-1502877338535-766e1452684a?w=800" data-category="city" />
+
+  <!-- Animals -->
+  <img src="https://images.unsplash.com/photo-1517849845537-4d257902454a?w=800" data-category="animals" />
+  <img src="https://images.unsplash.com/photo-1508672019048-805c876b67e2?w=800" data-category="animals" />
+  <img src="https://images.unsplash.com/photo-1518791841217-8f162f1e1131?w=800" data-category="animals" />
+</div>
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <span class="close-btn" onclick="closeLightbox()">&times;</span>
+  <span id="prev" class="nav-btn" onclick="prevImage()">&#10094;</span>
+  <img id="lightbox-img" />
+  <span id="next" class="nav-btn" onclick="nextImage()">&#10095;</span>
+</div>
+<script>
+const images = document.querySelectorAll('.gallery img');
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightbox-img');
+let currentIndex = 0;
+
+images.forEach((img, index) => {
+  img.onclick = () => {
+    currentIndex = index;
+    showLightbox();
+  };
+});
+
+function showLightbox() {
+  lightbox.style.display = 'flex';
+  lightboxImg.src = images[currentIndex].src;
+}
+
+function closeLightbox() {
+  lightbox.style.display = 'none';
+}
+function prevImage() {
+  currentIndex = (currentIndex - 1 + images.length) % images.length;
+  showLightbox();
+}
+function nextImage() {
+  currentIndex = (currentIndex + 1) % images.length;
+  showLightbox();
+}
+function filterImages(category) {
+  images.forEach(img => {
+    img.style.display = (category === 'all' || img.dataset.category === category) ? 'block' : 'none';
+  });
+}
+</script>
+</body>
+</html>
